@@ -1,0 +1,22 @@
+{
+  "name": "note-taker",
+  "version": "1.0.0",
+  "description": "Create an application that can be used to write and save notes using Express.js.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Tori Booker",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ebonygrrl/11-note-taker.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ebonygrrl/11-note-taker/issues"
+  },
+  "homepage": "https://github.com/ebonygrrl/11-note-taker#readme"
+}
