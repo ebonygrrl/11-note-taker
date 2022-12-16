@@ -56,7 +56,10 @@ app.post('/api/notes', (req, res) => {
         //console.log(req.body=newNote);
         const addNote = JSON.stringify(newNote);
 
-        fs.writeFile('./db/db.json', addNote, (err) => {
+        // need to append to an array in db
+
+
+        fs.appendFile('./db/db.json', addNote, (err) => {
             err ? console.log(err) : console.log('Note has been successfully added!');
         });
 
