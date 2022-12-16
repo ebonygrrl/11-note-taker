@@ -28,13 +28,42 @@ app.get('/', (req, res) =>
   res.sendFile(path.join(__dirname, './public/index.html'))
 );
 
-// notes route
+// GET notes route
 app.get('/notes', (req, res) =>
   res.sendFile(path.join(__dirname, './public/notes.html'))
 );
 
-// route to fetch
+// GET database / route to fetch
 app.get('/api/notes', (req, res) => res.json(db));
+
+// POST notes route
+app.post('/notes', (req, res) =>
+  res.sendFile(path.join(__dirname, './public/notes.html'))
+);
+
+// POST to db / route to fetch
+app.post('/api/notes', (req, res) => {
+
+    // Destructure assignment for items in req.body
+    const { title, text } = req.body;
+
+    if(title && text) {
+        const newNote = {
+            id: uuid(),
+            title,
+            text,
+        }
+
+        const response = {
+            
+        }
+    }
+});
+
+// delete note
+// app.delete('/', function (req, res) {
+//     res.send('DELETE request to homepage');
+// });
 
 // server port
 app.listen(port, () =>
