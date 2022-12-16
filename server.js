@@ -53,6 +53,12 @@ app.post('/api/notes', (req, res) => {
             title,
             text,
         };
+        //console.log(req.body=newNote);
+        const addNote = JSON.stringify(newNote);
+
+        fs.writeFile('./db/db.json', addNote, (err) => {
+            err ? console.log(err) : console.log('Note has been successfully added!');
+        });
 
         // get info from server if posted
         const response = {
