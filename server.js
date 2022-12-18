@@ -1,4 +1,4 @@
-// app requirements
+// app modules
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
@@ -53,14 +53,29 @@ app.post('/api/notes', (req, res) => {
             title,
             text,
         };
+        
         //console.log(req.body=newNote);
-        const addNote = JSON.stringify(newNote);
+        //const addNote = JSON.stringify(newNote);
 
         // need to append to an array in db
 
 
-        fs.appendFile('./db/db.json', addNote, (err) => {
-            err ? console.log(err) : console.log('Note has been successfully added!');
+        fs.readFile('./db/db.json', 'utf8', (err, data) => {
+
+            console.log('just data: ' + data); // multiple line
+            // Convert string into JSON object
+            const parsedNotes = JSON.parse(data); 
+            console.log(parsedNotes); // single line
+
+            // add newNote to JSON array
+            parsedNotes.push(newNote);
+
+            err ? console.log(err) : console.log('Notes has been successfully added!');
+
+            // overwrite existing db with updated info
+            fs.writeFile('./db/db.json', parsedNotes, (err) => {
+                err ? console.log(err) : console.log('Note has been successfully added!');
+            });
         });
 
         // get info from server if posted
