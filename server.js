@@ -53,13 +53,8 @@ app.post('/api/notes', (req, res) => {
             title,
             text,
         };
-        
-        //console.log(req.body=newNote);
-        //const addNote = JSON.stringify(newNote);
 
-        // need to append to an array in db
-
-
+        // read JSON file
         fs.readFile('./db/db.json', 'utf8', (err, data) => {
             // check for errors first
             if (err) {
@@ -94,10 +89,12 @@ app.post('/api/notes', (req, res) => {
     }
 });
 
-// delete note
-// app.delete('/', function (req, res) {
-//     res.send('DELETE request to homepage');
-// });
+// delete route
+app.delete('/api/notes/:id', function (req, res) {
+    res.send('DELETE request called');
+
+    // get the file, find the object with the matching id, slice or splice and rewrite file with updated info
+});
 
 // server port
 app.listen(port, () =>
