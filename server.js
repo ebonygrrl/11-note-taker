@@ -61,24 +61,26 @@ app.post('/api/notes', (req, res) => {
 
 
         fs.readFile('./db/db.json', 'utf8', (err, data) => {
+            // check for errors first
+            if (err) {
+                console.log('ERROR: ' + err);
+            } else {
 
-            console.log('just data: ' + data); // multiple line
-            // Convert string into JSON object
-            const parsedNotes = JSON.parse(data); 
-            console.log(parsedNotes); // single line
+                // parse data from read file    
+                const parsedNotes = JSON.parse(data); // Convert string into JSON object/
+                
+                parsedNotes.push(newNote); // add newNote to JSON array/
 
-            // add newNote to JSON array
-            parsedNotes.push(newNote);
+                const noteStr = JSON.stringify(parsedNotes, null, 4);
 
-            err ? console.log(err) : console.log('Notes has been successfully added!');
-
-            // overwrite existing db with updated info
-            fs.writeFile('./db/db.json', parsedNotes, (err) => {
-                err ? console.log(err) : console.log('Note has been successfully added!');
-            });
+                // overwrite existing db with updated info
+                fs.writeFile('./db/db.json', noteStr, (writeErr) => {
+                    err ? console.log(writeErr) : console.log('Note has been successfully added!');
+                });
+            }
         });
 
-        // get info from server if posted
+        //get info from server if posted
         const response = {
             status: 'success',
             body: newNote,
@@ -88,7 +90,6 @@ app.post('/api/notes', (req, res) => {
         res.status(201).json(response);
 
     } else {
-        // uh oh
         res.status(500).json('Error in posting review');
     }
 });
