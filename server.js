@@ -93,7 +93,8 @@ app.post('/api/notes', (req, res) => {
 app.delete('/api/notes/:id', function (req, res) {
     res.send('DELETE request called');
 
-    let currId = req.params.id;
+    const currId = req.params.id;
+    let output,getId;
     console.log(currId);
         
     // read JSON file
@@ -106,18 +107,28 @@ app.delete('/api/notes/:id', function (req, res) {
             //console.log(newData.length);
 
             for (let i=0; i < newData.length; i++) {
-                let thisId = newData[i].id;
-                
+                const thisId = newData[i].id;                
                     
-                console.log(thisId);
-                if (currId === thisId) {
-                    console.log('WE MATCH!');
+                //console.log(thisId);
+                //console.log('WE MATCH!');
+                function isNote(prop) {
+                    return prop.id === thisId;
                 }
             }
+
+            getId = newData.findIndex(isNote); // get index of object with matching id
+            output = newData.splice(getId, 1); // remove object from data array
+            //console.log(getId);
+            //console.log(JSON.stringify(newData, null, 4)); // item removed
+
+            const noteStr = JSON.stringify(newData, null, 4);
+            
+            // overwrite existing db with updated info
+            fs.writeFile('./db/db.json', noteStr, (writeErr) => {
+                err ? console.log(writeErr) : console.log('Note has been successfully added!');
+            });
         }
     });
-
-    // get the file, find the object with the matching id, slice or splice and rewrite file with updated info
 });
 
 // server port
