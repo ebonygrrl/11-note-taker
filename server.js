@@ -92,6 +92,9 @@ app.post('/api/notes', (req, res) => {
 // delete route
 app.delete('/api/notes/:id', function (req, res) {
     res.send('DELETE request called');
+
+    let currId = req.params.id;
+    console.log(currId);
         
     // read JSON file
     fs.readFile('./db/db.json', 'utf8', (err, data) => {
@@ -103,9 +106,13 @@ app.delete('/api/notes/:id', function (req, res) {
             //console.log(newData.length);
 
             for (let i=0; i < newData.length; i++) {
-                let currId = newData[i].id;
+                let thisId = newData[i].id;
                 
-                return currId;
+                    
+                console.log(thisId);
+                if (currId === thisId) {
+                    console.log('WE MATCH!');
+                }
             }
         }
     });
