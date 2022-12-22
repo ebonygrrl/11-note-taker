@@ -92,6 +92,23 @@ app.post('/api/notes', (req, res) => {
 // delete route
 app.delete('/api/notes/:id', function (req, res) {
     res.send('DELETE request called');
+        
+    // read JSON file
+    fs.readFile('./db/db.json', 'utf8', (err, data) => {
+        // check for errors first
+        if (err) {
+            console.log('ERROR: ' + err);
+        } else {
+            let newData = JSON.parse(data);
+            //console.log(newData.length);
+
+            for (let i=0; i < newData.length; i++) {
+                let currId = newData[i].id;
+                
+                return currId;
+            }
+        }
+    });
 
     // get the file, find the object with the matching id, slice or splice and rewrite file with updated info
 });
