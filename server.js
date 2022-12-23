@@ -8,6 +8,7 @@ const db = require('./db/db.json');
 
 // Helper method for generating unique ids
 const uuid = require('./helpers/uuid');
+const { nextTick } = require('process');
 
 // configure port
 const port = process.env.PORT || 3001;
@@ -94,7 +95,7 @@ app.delete('/api/notes/:id', function (req, res) {
     res.send('DELETE request called');
 
     const currId = req.params.id;
-    let output,getId;
+    let newData, noteStr, thisId, getId, output;
     console.log(currId);
         
     // read JSON file
@@ -103,17 +104,16 @@ app.delete('/api/notes/:id', function (req, res) {
         if (err) {
             console.log('ERROR: ' + err);
         } else {
-            let newData = JSON.parse(data);
+            newData = JSON.parse(data);
             //console.log(newData.length);
 
             for (let i=0; i < newData.length; i++) {
-                const thisId = newData[i].id;                
-                    
-                //console.log(thisId);
-                //console.log('WE MATCH!');
-                function isNote(prop) {
-                    return prop.id === thisId;
-                }
+                thisId = newData[i].id;  
+            }
+                
+            // findIndex function
+            function isNote(prop) {
+                return prop.id === thisId;
             }
 
             getId = newData.findIndex(isNote); // get index of object with matching id
@@ -121,14 +121,22 @@ app.delete('/api/notes/:id', function (req, res) {
             //console.log(getId);
             //console.log(JSON.stringify(newData, null, 4)); // item removed
 
-            const noteStr = JSON.stringify(newData, null, 4);
+            noteStr = JSON.stringify(newData, null, 4);
             
             // overwrite existing db with updated info
             fs.writeFile('./db/db.json', noteStr, (writeErr) => {
-                err ? console.log(writeErr) : console.log('Note has been successfully added!');
+                err ? console.log(writeErr) : console.log('Note has been successfully modified!');
             });
         }
     });
+
+    //get info from server if posted
+    const response = {
+        status: 'success'
+    };
+
+    console.log(response);
+    res.status(201);
 });
 
 // server port
