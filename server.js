@@ -8,7 +8,6 @@ const db = require('./db/db.json');
 
 // Helper method for generating unique ids
 const uuid = require('./helpers/uuid');
-const { nextTick } = require('process');
 
 // configure port
 const port = process.env.PORT || 3001;
@@ -37,11 +36,12 @@ app.get('/api/notes', (req, res) => res.json(db));
 
 //POST notes route
 app.post('/notes', (req, res) =>
-  res.sendFile(path.join(__dirname, './public/notes.html'))
+    res.sendFile(path.join(__dirname, './public/notes.html'))
 );
 
 // POST to db / route to fetch
 app.post('/api/notes', (req, res) => {
+    let parsedNotes;
 
     // destructure assignment for items in req.body
     const { title, text } = req.body;
@@ -61,12 +61,11 @@ app.post('/api/notes', (req, res) => {
             if (err) {
                 console.log('ERROR: ' + err);
             } else {
-
                 // parse data from read file    
-                const parsedNotes = JSON.parse(data); // Convert string into JSON object/
+                parsedNotes = JSON.parse(data); // Convert string into JSON object/
                 
                 parsedNotes.push(newNote); // add newNote to JSON array/
-
+                
                 const noteStr = JSON.stringify(parsedNotes, null, 4);
 
                 // overwrite existing db with updated info
@@ -78,7 +77,7 @@ app.post('/api/notes', (req, res) => {
 
         //get info from server if posted
         const response = {
-            status: 'success',
+            status: 'add success',
             body: newNote,
         };
 
@@ -94,9 +93,9 @@ app.post('/api/notes', (req, res) => {
 app.delete('/api/notes/:id', function (req, res) {
     res.send('DELETE request called');
 
-    const currId = req.params.id;
     let newData, noteStr, thisId, getId, output;
-    console.log(currId);
+    //const currId = req.params.id;
+    //console.log(currId);
         
     // read JSON file
     fs.readFile('./db/db.json', 'utf8', (err, data) => {
@@ -132,11 +131,11 @@ app.delete('/api/notes/:id', function (req, res) {
 
     //get info from server if posted
     const response = {
-        status: 'success'
+        status: 'delete success'
     };
 
     console.log(response);
-    res.status(201);
+    res.status(201).json(newData);
 });
 
 // server port
