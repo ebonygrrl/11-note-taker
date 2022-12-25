@@ -46,47 +46,44 @@ app.post('/api/notes', (req, res) => {
     // destructure assignment for items in req.body
     const { title, text } = req.body;
 
-    // check if title and text are present
-    if (title && text) {
-        // add id to constructor
-        const newNote = {
-            id: uuid(),
-            title,
-            text,
-        };
+    // add id to constructor
+    const newNote = {
+        id: uuid(),
+        title,
+        text,
+    };
 
-        // read JSON file
-        fs.readFile('./db/db.json', 'utf8', (err, data) => {
-            // check for errors first
-            if (err) {
-                console.log('ERROR: ' + err);
-            } else {
-                // parse data from read file    
-                parsedNotes = JSON.parse(data); // Convert string into JSON object/
-                
-                parsedNotes.push(newNote); // add newNote to JSON array/
-                
-                const noteStr = JSON.stringify(parsedNotes, null, 4);
+    const readFs = fs.readFileSync('./db/db.json', 'utf8');
+    console.log(readFs);
 
-                // overwrite existing db with updated info
-                fs.writeFile('./db/db.json', noteStr, (writeErr) => {
-                    err ? console.log(writeErr) : console.log('Note has been successfully added!');
-                });
-            }
-        });
+    // read JSON file
+    // fs.readFile('./db/db.json', 'utf8', (err, data) => {
+    //     // check for errors first
+    //     if (err) {
+    //         console.log('ERROR: ' + err);
+    //     } else {
+    //         // parse data from read file    
+    //         parsedNotes = JSON.parse(data); // Convert string into JSON object/
+            
+    //         parsedNotes.push(newNote); // add newNote to JSON array/
+            
+    //         const noteStr = JSON.stringify(parsedNotes, null, 4);
 
-        //get info from server if posted
-        const response = {
-            status: 'add success',
-            body: newNote,
-        };
+    //         // overwrite existing db with updated info
+    //         fs.writeFile('./db/db.json', noteStr, (writeErr) => {
+    //             err ? console.log(writeErr) : console.log('Note has been successfully added!');
+    //         });
+    //     }
+    // });
 
-        console.log(response);
-        res.status(201).json(response);
+    //get info from server if posted
+    const response = {
+        status: 'add success',
+        body: newNote,
+    };
 
-    } else {
-        res.status(500).json('Error in posting review');
-    }
+    console.log(response);
+    res.json(parsedNotes);
 });
 
 // delete route
