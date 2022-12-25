@@ -32,7 +32,11 @@ app.get('/notes', (req, res) =>
 );
 
 // GET database / route to fetch
-app.get('/api/notes', (req, res) => res.json(db));
+app.get('/api/notes', (req, res) => {
+    const readFs = JSON.parse(fs.readFileSync('./db/db.json', 'utf8'));
+
+    res.json(readFs);
+});
 
 //POST notes route
 app.post('/notes', (req, res) =>
@@ -41,7 +45,6 @@ app.post('/notes', (req, res) =>
 
 // POST to db / route to fetch
 app.post('/api/notes', (req, res) => {
-    let parsedNotes;
 
     // destructure assignment for items in req.body
     const { title, text } = req.body;
@@ -54,7 +57,11 @@ app.post('/api/notes', (req, res) => {
     };
 
     const readFs = fs.readFileSync('./db/db.json', 'utf8');
-    console.log(readFs);
+    //console.log(readFs);
+    const parsedNotes = JSON.parse(readFs);
+    parsedNotes.push(newNote);
+    const noteStr = JSON.stringify(parsedNotes, null, 4);
+    fs.writeFileSync('./db/db.json', noteStr);
 
     // read JSON file
     // fs.readFile('./db/db.json', 'utf8', (err, data) => {
@@ -79,11 +86,11 @@ app.post('/api/notes', (req, res) => {
     //get info from server if posted
     const response = {
         status: 'add success',
-        body: newNote,
+        body: parsedNotes,
     };
 
     console.log(response);
-    res.json(parsedNotes);
+    res.json(response);
 });
 
 // delete route
