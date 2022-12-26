@@ -1,66 +1,7 @@
 [
     {
-        "id": "1",
-        "title": "Test Title",
-        "text": "Test text"
-    },
-    {
-        "id": "6a99",
-        "title": "sdgdf",
-        "text": "gfsdgsdfg"
-    },
-    {
-        "id": "fb10",
-        "title": "sdgdf",
-        "text": "gfsdgsdfg"
-    },
-    {
-        "id": "8c51",
-        "title": "gfds",
-        "text": "gfsd"
-    },
-    {
-        "id": "9f47",
-        "title": "gfds",
-        "text": "gfsd"
-    },
-    {
-        "id": "32d3",
-        "title": "43253",
-        "text": "sgsdfgfd"
-    },
-    {
-        "id": "144d"
-    },
-    {
-        "title": "Test 2",
-        "text": "jfdla fdsakfl",
-        "id": 1
-    },
-    {
-        "title": "Test 2",
-        "text": "jfdla fdsakfl",
-        "id": 1
-    },
-    {
-        "title": "Test 2",
-        "text": "jfdla fdsakfl",
-        "id": 1
-    },
-    {
-        "title": "Test 2",
-        "text": "jfdla fdsakfl",
-        "id": 1
-    },
-    {
-        "id": "f932"
-    },
-    {
-        "id": "cabf"
-    },
-    {
-        "id": "d850",
-        "title": "Test 4",
-        "text": "jfldsa"
+        "id": "9dc8",
+        "title": "Test 1",
+        "text": "This is a test."
     }
 ]

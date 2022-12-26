@@ -43,9 +43,6 @@ app.post('/notes', (req, res) =>
 
 // POST to db / route to fetch
 app.post('/api/notes', (req, res) => {
-    
-    // destructure assignment for items in req.body
-    const { title, text } = req.body;
 
     // add id to constructor
     const note = {
@@ -54,9 +51,17 @@ app.post('/api/notes', (req, res) => {
         text: req.body.text,
     };
 
+    // get db file
     const readFs = JSON.parse(fs.readFileSync('./db/db.json', 'utf8'));
+
+    // add note to db array
     readFs.push(note);
+
+    // save file
     fs.writeFileSync('./db/db.json', JSON.stringify(readFs, null, 4));
+
+    // update json
+    res.json(readFs);
 });
 
 // delete route
