@@ -43,54 +43,53 @@ app.post('/notes', (req, res) =>
 
 // POST to db / route to fetch
 app.post('/api/notes', (req, res) => {
+    const txtBody = req.body;
 
-    // destructure assignment for items in req.body
-    const { title, text } = req.body;
+    txtBody.prop = 'id';
 
-    // add id to constructor
-    const newNote = {
-        id: uuid(),
-        title,
-        text,
-    };
+    console.log(txtBody);
 
-    // read JSON file
-    const readFs = fs.readFileSync('./db/db.json', 'utf8');
+    txtBody.id = uuid();
+    // // destructure assignment for items in req.body
+    // const { title, text } = req.body;
 
-    // parse data from read file
-    const parsedNotes = JSON.parse(readFs);
+    // // add id to constructor
+    // const newNote = {
+    //     id: uuid(),
+    //     title,
+    //     text,
+    // };
 
-    // Convert string into JSON object
-    parsedNotes.push(newNote);
-
-    // overwrite existing db with updated info
-    fs.writeFileSync('./db/db.json', JSON.stringify(parsedNotes, null, 4));
+    const readFs = JSON.parse(fs.readFileSync('./db/db.json', 'utf8'));
+    console.log(readFs);
+    readFs.push(txtBody);
+    fs.writeFileSync('./db/db.json', JSON.stringify(readFs, null, 4));
 });
 
 // delete route
-app.delete('/api/notes/:id', function (req, res) {
-    res.send('DELETE request called');
+// app.delete('/api/notes/:id', function (req, res) {
+//     res.send('DELETE request called');
 
-    let thisId;
-    let idParam = req.params.id;
+//     let thisId;
+//     let idParam = req.params.id;
         
-    // read JSON file
-    const readFs = JSON.parse(fs.readFileSync('./db/db.json', 'utf8'));    
+//     // read JSON file
+//     const readFs = JSON.parse(fs.readFileSync('./db/db.json', 'utf8'));    
 
-    for(let i=0; i < readFs.length; i++) {
+//     for(let i=0; i < readFs.length; i++) {
 
-        // get index of list item
-        if(readFs[i].id === idParam) {
-            thisId = i;
-        }
-    }
+//         // get index of list item
+//         if(readFs[i].id === idParam) {
+//             thisId = i;
+//         }
+//     }
 
-    // remove object from data array
-    readFs.splice(thisId, 1); 
+//     // remove object from data array
+//     readFs.splice(thisId, 1); 
     
-    // overwrite existing db with updated info
-    fs.writeFileSync('./db/db.json', JSON.stringify(readFs, null, 4));
-});
+//     // overwrite existing db with updated info
+//     fs.writeFileSync('./db/db.json', JSON.stringify(readFs, null, 4));
+// });
 
 // server port
 app.listen(port, () =>
