@@ -43,53 +43,46 @@ app.post('/notes', (req, res) =>
 
 // POST to db / route to fetch
 app.post('/api/notes', (req, res) => {
-    const txtBody = req.body;
+    
+    // destructure assignment for items in req.body
+    const { title, text } = req.body;
 
-    txtBody.prop = 'id';
-
-    console.log(txtBody);
-
-    txtBody.id = uuid();
-    // // destructure assignment for items in req.body
-    // const { title, text } = req.body;
-
-    // // add id to constructor
-    // const newNote = {
-    //     id: uuid(),
-    //     title,
-    //     text,
-    // };
+    // add id to constructor
+    const note = {
+        id: uuid(),
+        title: req.body.title,
+        text: req.body.text,
+    };
 
     const readFs = JSON.parse(fs.readFileSync('./db/db.json', 'utf8'));
-    console.log(readFs);
-    readFs.push(txtBody);
+    readFs.push(note);
     fs.writeFileSync('./db/db.json', JSON.stringify(readFs, null, 4));
 });
 
 // delete route
-// app.delete('/api/notes/:id', function (req, res) {
-//     res.send('DELETE request called');
+app.delete('/api/notes/:id', function (req, res) {
+    res.send('DELETE request called');
 
-//     let thisId;
-//     let idParam = req.params.id;
+    let thisId;
+    let idParam = req.params.id;
         
-//     // read JSON file
-//     const readFs = JSON.parse(fs.readFileSync('./db/db.json', 'utf8'));    
+    // read JSON file
+    const readFs = JSON.parse(fs.readFileSync('./db/db.json', 'utf8'));    
 
-//     for(let i=0; i < readFs.length; i++) {
+    for(let i=0; i < readFs.length; i++) {
 
-//         // get index of list item
-//         if(readFs[i].id === idParam) {
-//             thisId = i;
-//         }
-//     }
+        // get index of list item
+        if(readFs[i].id === idParam) {
+            thisId = i;
+        }
+    }
 
-//     // remove object from data array
-//     readFs.splice(thisId, 1); 
+    // remove object from data array
+    readFs.splice(thisId, 1); 
     
-//     // overwrite existing db with updated info
-//     fs.writeFileSync('./db/db.json', JSON.stringify(readFs, null, 4));
-// });
+    // overwrite existing db with updated info
+    fs.writeFileSync('./db/db.json', JSON.stringify(readFs, null, 4));
+});
 
 // server port
 app.listen(port, () =>
