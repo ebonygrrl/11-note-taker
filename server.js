@@ -33,7 +33,7 @@ app.get('/api/notes', (req, res) => {
     // GET instant updates
     const readFs = JSON.parse(fs.readFileSync('./db/db.json', 'utf8'));
 
-    res.json(readFs);
+    res.status(200).json(readFs);
 });
 
 //POST notes route
@@ -61,7 +61,7 @@ app.post('/api/notes', (req, res) => {
     fs.writeFileSync('./db/db.json', JSON.stringify(readFs, null, 4));
 
     // update json
-    res.json(readFs);
+    res.status(200).json(readFs);
 });
 
 // delete route
@@ -87,6 +87,9 @@ app.delete('/api/notes/:id', function (req, res) {
     
     // overwrite existing db with updated info
     fs.writeFileSync('./db/db.json', JSON.stringify(readFs, null, 4));
+    
+    // update json
+    res.status(200).json(readFs);
 });
 
 // server port
