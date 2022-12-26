@@ -3,12 +3,8 @@ const express = require('express');
 const path = require('path');
 const fs = require('fs');
 
-// notes db
-const db = require('./db/db.json');
-
 // Helper method for generating unique ids
 const uuid = require('./helpers/uuid');
-const { nextTick } = require('process');
 
 // configure port
 const port = process.env.PORT || 3001;
@@ -33,110 +29,67 @@ app.get('/notes', (req, res) =>
 );
 
 // GET database / route to fetch
-app.get('/api/notes', (req, res) => res.json(db));
+app.get('/api/notes', (req, res) => {
+    // GET instant updates
+    const readFs = JSON.parse(fs.readFileSync('./db/db.json', 'utf8'));
+
+    res.status(200).json(readFs);
+});
 
 //POST notes route
 app.post('/notes', (req, res) =>
-  res.sendFile(path.join(__dirname, './public/notes.html'))
+    res.sendFile(path.join(__dirname, './public/notes.html'))
 );
 
 // POST to db / route to fetch
 app.post('/api/notes', (req, res) => {
 
-    // destructure assignment for items in req.body
-    const { title, text } = req.body;
+    // add id to constructor
+    const note = {
+        id: uuid(),
+        title: req.body.title,
+        text: req.body.text,
+    };
 
-    // check if title and text are present
-    if (title && text) {
-        // add id to constructor
-        const newNote = {
-            id: uuid(),
-            title,
-            text,
-        };
+    // get db file
+    const readFs = JSON.parse(fs.readFileSync('./db/db.json', 'utf8'));
 
-        // read JSON file
-        fs.readFile('./db/db.json', 'utf8', (err, data) => {
-            // check for errors first
-            if (err) {
-                console.log('ERROR: ' + err);
-            } else {
+    // add note to db array
+    readFs.push(note);
 
-                // parse data from read file    
-                const parsedNotes = JSON.parse(data); // Convert string into JSON object/
-                
-                parsedNotes.push(newNote); // add newNote to JSON array/
+    // save file
+    fs.writeFileSync('./db/db.json', JSON.stringify(readFs, null, 4));
 
-                const noteStr = JSON.stringify(parsedNotes, null, 4);
-
-                // overwrite existing db with updated info
-                fs.writeFile('./db/db.json', noteStr, (writeErr) => {
-                    err ? console.log(writeErr) : console.log('Note has been successfully added!');
-                });
-            }
-        });
-
-        //get info from server if posted
-        const response = {
-            status: 'success',
-            body: newNote,
-        };
-
-        console.log(response);
-        res.status(201).json(response);
-
-    } else {
-        res.status(500).json('Error in posting review');
-    }
+    // update json
+    res.status(200).json(readFs);
 });
 
 // delete route
 app.delete('/api/notes/:id', function (req, res) {
     res.send('DELETE request called');
 
-    const currId = req.params.id;
-    let newData, noteStr, thisId, getId, output;
-    console.log(currId);
+    let thisId;
+    let idParam = req.params.id;
         
     // read JSON file
-    fs.readFile('./db/db.json', 'utf8', (err, data) => {
-        // check for errors first
-        if (err) {
-            console.log('ERROR: ' + err);
-        } else {
-            newData = JSON.parse(data);
-            //console.log(newData.length);
+    const readFs = JSON.parse(fs.readFileSync('./db/db.json', 'utf8'));    
 
-            for (let i=0; i < newData.length; i++) {
-                thisId = newData[i].id;  
-            }
-                
-            // findIndex function
-            function isNote(prop) {
-                return prop.id === thisId;
-            }
+    for(let i=0; i < readFs.length; i++) {
 
-            getId = newData.findIndex(isNote); // get index of object with matching id
-            output = newData.splice(getId, 1); // remove object from data array
-            //console.log(getId);
-            //console.log(JSON.stringify(newData, null, 4)); // item removed
-
-            noteStr = JSON.stringify(newData, null, 4);
-            
-            // overwrite existing db with updated info
-            fs.writeFile('./db/db.json', noteStr, (writeErr) => {
-                err ? console.log(writeErr) : console.log('Note has been successfully modified!');
-            });
+        // get index of list item
+        if(readFs[i].id === idParam) {
+            thisId = i;
         }
-    });
+    }
 
-    //get info from server if posted
-    const response = {
-        status: 'success'
-    };
-
-    console.log(response);
-    res.status(201);
+    // remove object from data array
+    readFs.splice(thisId, 1); 
+    
+    // overwrite existing db with updated info
+    fs.writeFileSync('./db/db.json', JSON.stringify(readFs, null, 4));
+    
+    // update json
+    res.status(200).json(readFs);
 });
 
 // server port
